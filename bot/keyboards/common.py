@@ -9,6 +9,7 @@ def main_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Записаться на занятие", callback_data="lead:start")],
         [InlineKeyboardButton(text="Посмотреть курсы", callback_data="courses:list")],
+        [InlineKeyboardButton(text="Книжный клуб EduReading", callback_data="info:edureading")],
         [InlineKeyboardButton(text="Задать вопрос", callback_data="question:start")],
         [
             InlineKeyboardButton(text="Контакты", callback_data="info:contacts"),
@@ -19,6 +20,13 @@ def main_menu() -> InlineKeyboardMarkup:
 
 def back_main() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="В главное меню", callback_data="menu:main")]])
+
+
+def edureading_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Перейти в EduReading", url="https://t.me/EduReading")],
+        [InlineKeyboardButton(text="В главное меню", callback_data="menu:main")],
+    ])
 
 
 def cancel_keyboard() -> InlineKeyboardMarkup:

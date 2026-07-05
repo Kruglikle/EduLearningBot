@@ -1,13 +1,14 @@
 from __future__ import annotations
 
+from contextlib import suppress
 from datetime import datetime, timezone
 
 from aiogram import Bot, F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, FSInputFile, Message
 
-from bot.config import Settings
+from bot.config import BASE_DIR, Settings
 from bot.database import Database
 from bot.keyboards.common import (
     back_main,
@@ -16,6 +17,7 @@ from bot.keyboards.common import (
     courses_overview_actions,
     courses_keyboard,
     direction_keyboard,
+    edureading_keyboard,
     main_menu,
     options_keyboard,
 )
@@ -30,6 +32,21 @@ from bot.states import LeadForm, QuestionForm
 
 
 router = Router()
+
+EDUREADING_IMAGE = BASE_DIR / "bot" / "data" / "edu-reading.jpg"
+EDUREADING_TEXT = (
+    "Книжный клуб EduReading\n\n"
+    "Добро пожаловать в EduReading — книжный клуб на базе сообщества EduLearning!\n\n"
+    "Это пространство для тех, кто любит книги, хочет читать регулярно и обсуждать прочитанное в приятной компании.\n\n"
+    "Здесь мы вместе будем:\n"
+    "• выбирать интересные книги;\n"
+    "• читать их в комфортном темпе;\n"
+    "• делиться впечатлениями, мыслями и любимыми цитатами;\n"
+    "• обсуждать идеи, персонажей и темы, которые нас зацепили.\n\n"
+    "Неважно, сколько книг вы читаете в год — одну или пятьдесят. Главное — интерес к чтению и желание открывать для себя что-то новое.\n\n"
+    "Надеемся, что наш книжный клуб станет местом, куда захочется возвращаться за вдохновением, новыми знаниями и приятным общением.\n\n"
+    "Приятного чтения и добро пожаловать в EduReading!"
+)
 
 AGE_OPTIONS = ["школьник", "студент", "взрослый"]
 FORMAT_OPTIONS = ["индивидуально", "мини-группа", "пока не знаю"]
@@ -295,6 +312,21 @@ async def contacts(callback: CallbackQuery, settings: Settings) -> None:
         lines.append(f"Email: {settings.contact_email}")
     lines.append("\nВы можете оставить заявку прямо здесь, и команда EduLearning свяжется с вами.")
     await callback.message.edit_text("\n".join(lines), reply_markup=back_main())
+    await callback.answer()
+
+
+@router.callback_query(F.data == "info:edureading")
+async def edureading(callback: CallbackQuery) -> None:
+    if EDUREADING_IMAGE.exists():
+        await callback.message.answer_photo(
+            photo=FSInputFile(EDUREADING_IMAGE),
+            caption=EDUREADING_TEXT,
+            reply_markup=edureading_keyboard(),
+        )
+        with suppress(Exception):
+            await callback.message.delete()
+    else:
+        await callback.message.edit_text(EDUREADING_TEXT, reply_markup=edureading_keyboard())
     await callback.answer()
 
 
