@@ -1,0 +1,12 @@
+.env
+*.db
+*.db-shm
+*.db-wal
+exports/
+logs/
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+.idea/
+.vscode/

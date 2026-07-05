@@ -1,0 +1,38 @@
+[
+  {
+    "id": "english-basic",
+    "title": "Английский язык",
+    "direction": "Английский язык",
+    "level": "Начальный и средний",
+    "duration": "от 2 месяцев",
+    "short_description": "Практика разговорного английского, грамматика и уверенное применение языка в учебе, работе и поездках.",
+    "status": "open"
+  },
+  {
+    "id": "blender-3d",
+    "title": "3D-дизайн / Blender",
+    "direction": "3D-дизайн / Blender",
+    "level": "С нуля",
+    "duration": "от 6 недель",
+    "short_description": "Основы моделирования, материалов, света и рендера в Blender через понятные практические проекты.",
+    "status": "open"
+  },
+  {
+    "id": "python-start",
+    "title": "Python",
+    "direction": "Python",
+    "level": "С нуля",
+    "duration": "от 2 месяцев",
+    "short_description": "Базовый Python, алгоритмическое мышление и небольшие прикладные проекты для старта в программировании.",
+    "status": "open"
+  },
+  {
+    "id": "ai-nlp",
+    "title": "AI / NLP",
+    "direction": "AI / NLP",
+    "level": "Базовый и продвинутый",
+    "duration": "индивидуально",
+    "short_description": "Введение в современные AI-инструменты, обработку текста и практические NLP-задачи.",
+    "status": "waitlist"
+  }
+]
