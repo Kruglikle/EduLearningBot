@@ -22,15 +22,27 @@ PROJECT_SITE=https://edu-learning.ru/
 CONTACT_EMAIL=info@example.com
 CONTACT_TELEGRAM=@edulearning
 DATABASE_URL=sqlite:///edulearning_bot.db
+WEB_HOST=0.0.0.0
+WEB_PORT=8080
+WEB_ALLOWED_ORIGINS=https://edu-learning.ru,https://kruglikle.github.io
 ```
 
 `ADMIN_CHAT_ID` используется для уведомлений о новых заявках и вопросах. `ADMIN_IDS` разрешает доступ к `/admin` и `/export_leads`.
+`WEB_ALLOWED_ORIGINS` ограничивает, с каких доменов сайт может отправлять заявки в бота. Для GitHub Pages указывайте origin без пути, например `https://kruglikle.github.io`.
 
 ## Запуск
 
 ```bash
 python -m bot.main
 ```
+
+HTTP API для формы сайта поднимается вместе с ботом:
+
+```text
+POST /api/leads
+```
+
+Ожидает JSON-поля `name`, `contact`, `direction`, `goal`, `page`. Заявка сохраняется в ту же SQLite-базу и доступна в `/admin`.
 
 Через Docker:
 

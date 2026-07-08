@@ -6,11 +6,13 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiohttp import web
 
 from bot.config import load_settings
 from bot.database import Database
 from bot.handlers import admin, user
 from bot.services.courses import CourseService
+from bot.web import create_app
 
 
 async def main() -> None:
@@ -30,7 +32,18 @@ async def main() -> None:
     dp.include_router(user.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+
+    web_app = create_app(db, settings, bot)
+    runner = web.AppRunner(web_app)
+    await runner.setup()
+    site = web.TCPSite(runner, settings.web_host, settings.web_port)
+    await site.start()
+    logging.info("Lead API is listening on http://%s:%s", settings.web_host, settings.web_port)
+
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await runner.cleanup()
 
 
 if __name__ == "__main__":

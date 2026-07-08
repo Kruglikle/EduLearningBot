@@ -7,4 +7,6 @@ services:
       - ./edulearning_bot.db:/app/edulearning_bot.db
       - ./bot/data/courses.json:/app/bot/data/courses.json:ro
       - ./exports:/app/exports
+    ports:
+      - "8080:8080"
     restart: unless-stopped

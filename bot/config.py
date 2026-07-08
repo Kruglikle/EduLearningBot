@@ -20,6 +20,9 @@ class Settings:
     contact_telegram: str
     database_url: str
     courses_path: Path
+    web_host: str
+    web_port: int
+    web_allowed_origins: set[str]
 
     @property
     def sqlite_path(self) -> Path:
@@ -51,6 +54,12 @@ def _parse_admin_ids(value: str | None) -> set[int]:
     return {int(item.strip()) for item in value.split(",") if item.strip()}
 
 
+def _parse_origins(value: str | None) -> set[str]:
+    if not value:
+        return set()
+    return {item.strip().rstrip("/") for item in value.split(",") if item.strip()}
+
+
 def load_settings() -> Settings:
     load_dotenv(BASE_DIR / ".env")
     return Settings(
@@ -62,4 +71,7 @@ def load_settings() -> Settings:
         contact_telegram=os.getenv("CONTACT_TELEGRAM", ""),
         database_url=os.getenv("DATABASE_URL", "sqlite:///edulearning_bot.db"),
         courses_path=BASE_DIR / "bot" / "data" / "courses.json",
+        web_host=os.getenv("WEB_HOST", "0.0.0.0"),
+        web_port=int(os.getenv("WEB_PORT", "8080")),
+        web_allowed_origins=_parse_origins(os.getenv("WEB_ALLOWED_ORIGINS")),
     )
