@@ -26,19 +26,21 @@ def create_app(db: Database, settings: Settings, bot: Bot) -> web.Application:
     return app
 
 
-@web.middleware
-async def cors_middleware(request: web.Request, handler: Any) -> web.StreamResponse:
-    settings: Settings = request.app["settings"]
-    origin = request.headers.get("Origin", "").rstrip("/")
-    response = await handler(request)
+def cors_middleware(settings: Settings) -> Any:
+    @web.middleware
+    async def middleware(request: web.Request, handler: Any) -> web.StreamResponse:
+        origin = request.headers.get("Origin", "").rstrip("/")
+        response = await handler(request)
 
-    if _origin_allowed(origin, settings):
-        response.headers["Access-Control-Allow-Origin"] = origin
-        response.headers["Vary"] = "Origin"
-        response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        if _origin_allowed(origin, settings):
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Vary"] = "Origin"
+            response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type"
 
-    return response
+        return response
+
+    return middleware
 
 
 async def health(_: web.Request) -> web.Response:
